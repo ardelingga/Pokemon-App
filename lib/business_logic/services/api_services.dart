@@ -19,7 +19,7 @@ class ApiService {
         receiveTimeout: 4000);
 
     dio = Dio(options);
-    dio!.interceptors.add(PrettyDioLogger());
+    // dio!.interceptors.add(PrettyDioLogger());
   }
 
   Future getRequest(String url, {params}) async {
@@ -32,7 +32,7 @@ class ApiService {
 
       return ResponseModel(
         status: true,
-        data: response.data['results'],
+        data: response.data,
       );
     } on DioError catch (e) {
       debugPrint("ERROR => " + e.message.toString());
