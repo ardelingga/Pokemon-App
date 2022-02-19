@@ -8,6 +8,7 @@ import 'package:pokemon_app/business_logic/models/pokemon_model.dart';
 import 'package:pokemon_app/views/screens/detail_pokemon/widgets/about_tab.dart';
 import 'package:pokemon_app/views/screens/detail_pokemon/widgets/base_stats_tab.dart';
 import 'package:pokemon_app/views/screens/detail_pokemon/widgets/notfound_tab.dart';
+import 'package:pokemon_app/views/screens/home/widgets/img_loading_shimmer.dart';
 
 class DetailPokemonScreen extends StatefulWidget {
   DetailPokemonScreen({Key? key, required this.pokemon, this.heroTag})
@@ -215,7 +216,9 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
                                       controller: tabController,
                                       children: [
                                         AboutTab(pokemon: widget.pokemon),
-                                        BaseStatsTab(pokemon: widget.pokemon,),
+                                        BaseStatsTab(
+                                          pokemon: widget.pokemon,
+                                        ),
                                         const NotFoundTab(),
                                         const NotFoundTab(),
                                       ],
@@ -314,15 +317,7 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
                                         imageUrl: widget.pokemon.img!,
                                         progressIndicatorBuilder:
                                             (context, url, downloadProgress) =>
-                                                SizedBox(
-                                          height: 30,
-                                          width: 30,
-                                          child: CircularProgressIndicator(
-                                            value: downloadProgress.progress,
-                                            color: Colors.grey,
-                                            backgroundColor: Colors.grey,
-                                          ),
-                                        ),
+                                                const ImgLoadingShimmer(),
                                         errorWidget: (context, url, error) =>
                                             const Icon(Icons.error),
                                       ),

@@ -5,8 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pokemon_app/business_logic/blocs/pokemon/pokemon_cubit.dart';
 import 'package:pokemon_app/business_logic/constants/path_assets.dart';
 import 'package:pokemon_app/views/screens/detail_pokemon/detail_pokemon_screen.dart';
+import 'package:pokemon_app/views/screens/home/widgets/content_shimmer.dart';
 import 'package:pokemon_app/views/widgets/common_widgets.dart';
 import 'package:pokemon_app/views/widgets/drawer_navigation_widget.dart';
+
+import 'widgets/img_loading_shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -54,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         key: _scaffoldKey,
         endDrawer: const DrawerNavigationWidget(),
+        backgroundColor: Colors.white,
         body: Stack(
           children: [
             Positioned(
@@ -141,9 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 BlocBuilder<PokemonCubit, PokemonState>(
                   builder: (context, state) {
                     if (state is PokemonLoading || state is PokemonInitial) {
-                      return const SliverPadding(
-                        padding: EdgeInsets.all(8.0),
-                      );
+                      return const ContentShimmer();
                     } else if (state is PokemonLoaded) {
                       return SliverPadding(
                         padding: const EdgeInsets.symmetric(
@@ -157,7 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => DetailPokemonScreen(
+                                          builder: (context) =>
+                                              DetailPokemonScreen(
                                                 pokemon: state.listPokemon[i],
                                                 heroTag: "imgHeroTag#$i",
                                               )));
@@ -285,20 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           progressIndicatorBuilder:
                                                               (context, url,
                                                                       downloadProgress) =>
-                                                                  SizedBox(
-                                                            height: 30,
-                                                            width: 30,
-                                                            child:
-                                                                CircularProgressIndicator(
-                                                              value:
-                                                                  downloadProgress
-                                                                      .progress,
-                                                              color:
-                                                                  Colors.grey,
-                                                              backgroundColor:
-                                                                  Colors.grey,
-                                                            ),
-                                                          ),
+                                                                  const ImgLoadingShimmer(),
                                                           errorWidget: (context,
                                                                   url, error) =>
                                                               const Icon(
