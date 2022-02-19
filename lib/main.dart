@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pokemon_app/business_logic/config/config.dart';
+import 'package:pokemon_app/business_logic/providers/drawer_navigation_provider.dart';
 import 'package:pokemon_app/business_logic/services/api_services.dart';
 import 'package:pokemon_app/views/screens/home/home_screen.dart';
+import 'package:pokemon_app/views/screens/main_navigation.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,16 +20,22 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: Config.appName,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.robotoTextTheme(
-          Theme.of(context).textTheme,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<DrawerNavigationProvider>(
+            create: (context) => DrawerNavigationProvider()),
+      ],
+      child: MaterialApp(
+        title: Config.appName,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          textTheme: GoogleFonts.robotoTextTheme(
+            Theme.of(context).textTheme,
+          ),
         ),
+        home: const MainNavigation(),
       ),
-      home: const HomeScreen(),
     );
   }
 }

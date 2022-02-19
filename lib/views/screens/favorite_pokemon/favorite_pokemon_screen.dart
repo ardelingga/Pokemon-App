@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon_app/business_logic/blocs/pokemon/pokemon_cubit.dart';
+import 'package:pokemon_app/business_logic/providers/drawer_navigation_provider.dart';
+import 'package:pokemon_app/views/screens/favorite_pokemon/widgets/favorite_shimmer.dart';
+import 'package:pokemon_app/views/screens/favorite_pokemon/widgets/item_favorite.dart';
 import 'package:pokemon_app/views/screens/home/widgets/background_logo.dart';
 import 'package:pokemon_app/views/screens/home/widgets/content_shimmer.dart';
 import 'package:pokemon_app/views/screens/home/widgets/item_pokemon.dart';
+import 'package:pokemon_app/views/widgets/common_widgets.dart';
 import 'package:pokemon_app/views/widgets/drawer_navigation_widget.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class FavoritePokemonScreen extends StatefulWidget {
+  const FavoritePokemonScreen({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _FavoritePokemonScreenState createState() => _FavoritePokemonScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _FavoritePokemonScreenState extends State<FavoritePokemonScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  DrawerNavigationProvider? drawerNavigationProvider;
   ScrollController? scrollController;
   var pokemonCubit = PokemonCubit();
   double heightSliverbar = 20;
@@ -33,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> firstAction() async {
-    await pokemonCubit.getListPokemon();
+    await pokemonCubit.getListFavoritePokemon();
     scrollController!.addListener(() {
       var scroll = scrollController!.position.pixels * 3;
       if (scroll >= 20 && scroll <= 60) {
@@ -46,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    drawerNavigationProvider = context.read<DrawerNavigationProvider>();
     Size size = MediaQuery.of(context).size;
     return BlocProvider<PokemonCubit>(
       create: (context) => pokemonCubit,
@@ -68,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.black87,
                         size: 25,
                       ),
-                      onPressed: () {
-                        // Do something
+                      onPressed: () async{
+                        await drawerNavigationProvider!.setCurrentMenu(0);
                       },
                     ),
                   ),
@@ -105,7 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           bottom: 10,
                           left: heightSliverbar,
                           child: const Text(
-                            "Pokedex",
+                            "My Favorites Pokemon ",
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: Colors.black87,
                               fontSize: 26,
@@ -120,25 +127,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 BlocBuilder<PokemonCubit, PokemonState>(
                   builder: (context, state) {
                     if (state is PokemonLoading || state is PokemonInitial) {
-                      return const ContentShimmer();
+                      return const FavoriteShimmer();
                     } else if (state is PokemonLoaded) {
                       return SliverPadding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 20),
-                        sliver: SliverGrid(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, i) {
-                              return ItemPokemon(
-                                  pokemon: state.listPokemon[i], i: i);
-                            },
-                            childCount: state.listPokemon.length,
-                          ),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 4 / 3,
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate(
+                            [
+                              ListView.builder(
+                                itemCount: state.listPokemon.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context, i) {
+                                  return ItemFavorite(
+                                      pokemon: state.listPokemon[i], i: i);
+                                },
+                              )
+                            ],
                           ),
                         ),
                       );
