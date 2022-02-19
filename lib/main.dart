@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pokemon_app/business_logic/config/config.dart';
 import 'package:pokemon_app/business_logic/services/api_services.dart';
-import 'package:pokemon_app/views/screens/detail_screen.dart';
-import 'package:pokemon_app/views/screens/home_screen.dart';
+import 'package:pokemon_app/views/screens/detail_pokemon/detail_pokemon_screen.dart';
+import 'package:pokemon_app/views/screens/home/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: const DetailScreen(),
+      home: const HomeScreen(),
     );
   }
 }

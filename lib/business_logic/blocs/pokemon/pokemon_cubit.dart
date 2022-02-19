@@ -23,20 +23,43 @@ class PokemonCubit extends Cubit<PokemonState> {
 
       ResponseModel resDetailPokemon = await apiService.getRequest(urlDetail);
 
-      listPokemon.add(PokemonModel(
-        name: resDetailPokemon.data['name'],
-        img: resDetailPokemon.data['sprites']['other']['home']['front_default'],
-        weight: resDetailPokemon.data['weight'],
-        height: resDetailPokemon.data['height'],
-        types: List<TypePokemonModel>.generate(
-            resDetailPokemon.data['types'].length,
-            (j) => TypePokemonModel(
-                name: resDetailPokemon.data['types'][j]['type']['name'])),
-      ));
-    }
-
-    for (int k = 0; k > listPokemon.length; k++) {
-      print(listPokemon[k].img);
+      listPokemon.add(
+        PokemonModel(
+            name: resDetailPokemon.data['name'],
+            species: resDetailPokemon.data['species']['name'],
+            img: resDetailPokemon.data['sprites']['other']['home']
+                ['front_default'],
+            weight: resDetailPokemon.data['weight'],
+            height: resDetailPokemon.data['height'],
+            types: List<TypePokemonModel>.generate(
+              resDetailPokemon.data['types'].length,
+              (j) => TypePokemonModel(
+                name: resDetailPokemon.data['types'][j]['type']['name'],
+              ),
+            ),
+            abilities: List<AbilityPokemonModel>.generate(
+              resDetailPokemon.data['abilities'].length,
+              (k) => AbilityPokemonModel(
+                  name: resDetailPokemon.data['abilities'][k]['ability']
+                      ['name']),
+            ),
+            stats: List<StatPokemonModel>.generate(
+              resDetailPokemon.data['stats'].length,
+              (l) => StatPokemonModel(
+                name: resDetailPokemon.data['stats'][l]['stat']['name'],
+                amount: resDetailPokemon.data['stats'][l]['base_stat'],
+              ),
+            ),
+            groups: List<GroupPokemonModel>.generate(
+              resDetailPokemon.data['moves'][0]['version_group_details'].length,
+              (m) => GroupPokemonModel(
+                moveLearnMethod: resDetailPokemon.data['moves'][0]
+                    ['version_group_details'][m]['move_learn_method']['name'],
+                versionGroup: resDetailPokemon.data['moves'][0]
+                    ['version_group_details'][m]['version_group']['name'],
+              ),
+            )),
+      );
     }
     emit(PokemonLoaded(listPokemon: listPokemon));
   }
