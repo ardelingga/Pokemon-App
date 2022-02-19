@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 import 'package:pokemon_app/business_logic/models/pokemon_model.dart';
 import 'package:pokemon_app/business_logic/models/response_model.dart';
+import 'package:pokemon_app/business_logic/providers/favorite_pokemon_provider.dart';
 import 'package:pokemon_app/business_logic/services/api_services.dart';
 
 part 'pokemon_state.dart';
@@ -25,6 +26,7 @@ class PokemonCubit extends Cubit<PokemonState> {
 
       listPokemon.add(
         PokemonModel(
+          id: resDetailPokemon.data['id'],
           name: resDetailPokemon.data['name'],
           species: resDetailPokemon.data['species']['name'],
           img: resDetailPokemon.data['sprites']['other']['home']
@@ -63,24 +65,23 @@ class PokemonCubit extends Cubit<PokemonState> {
     }
     emit(PokemonLoaded(listPokemon: listPokemon));
   }
-  
-  
+
   Future<void> getListFavoritePokemon() async {
     emit(PokemonLoading());
 
-    var params = {'offset': 0, 'limit': 20};
     List<PokemonModel> listPokemon = [];
+    List<String>? listFavorite =
+        favoritePokemonProviderSpecial!.listFavoritePokemon;
+    debugPrint("SPECIAL => " + listFavorite.toString());
 
-    ResponseModel resListPokemon =
-        await apiService.getRequest("pokemon", params: params);
+    for (int i = 0; i < listFavorite!.length; i++) {
+      var idPokemon = listFavorite[i];
 
-    for (int i = 0; i < resListPokemon.data["results"].length; i++) {
-      var urlDetail = resListPokemon.data["results"][i]["url"];
-
-      ResponseModel resDetailPokemon = await apiService.getRequest(urlDetail);
-
+      ResponseModel resDetailPokemon =
+          await apiService.getRequest("pokemon/$idPokemon");
       listPokemon.add(
         PokemonModel(
+          id: resDetailPokemon.data['id'],
           name: resDetailPokemon.data['name'],
           species: resDetailPokemon.data['species']['name'],
           img: resDetailPokemon.data['sprites']['other']['home']

@@ -5,9 +5,6 @@ import 'package:pokemon_app/business_logic/providers/drawer_navigation_provider.
 import 'package:pokemon_app/views/screens/favorite_pokemon/widgets/favorite_shimmer.dart';
 import 'package:pokemon_app/views/screens/favorite_pokemon/widgets/item_favorite.dart';
 import 'package:pokemon_app/views/screens/home/widgets/background_logo.dart';
-import 'package:pokemon_app/views/screens/home/widgets/content_shimmer.dart';
-import 'package:pokemon_app/views/screens/home/widgets/item_pokemon.dart';
-import 'package:pokemon_app/views/widgets/common_widgets.dart';
 import 'package:pokemon_app/views/widgets/drawer_navigation_widget.dart';
 
 class FavoritePokemonScreen extends StatefulWidget {

@@ -7,6 +7,7 @@ import 'package:pokemon_app/views/screens/detail_pokemon/detail_pokemon_screen.d
 import 'package:pokemon_app/views/screens/home/widgets/img_loading_shimmer.dart';
 import 'package:pokemon_app/views/widgets/common_widgets.dart';
 
+// ignore: must_be_immutable
 class ItemFavorite extends StatelessWidget {
   ItemFavorite({Key? key, required this.pokemon, required this.i})
       : super(key: key);

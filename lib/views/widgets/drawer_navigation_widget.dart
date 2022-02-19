@@ -4,6 +4,7 @@ import 'package:pokemon_app/business_logic/providers/drawer_navigation_provider.
 import 'package:pokemon_app/views/screens/home/widgets/img_loading_shimmer.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class DrawerNavigationWidget extends StatelessWidget {
   DrawerNavigationWidget({Key? key}) : super(key: key);
 
@@ -20,7 +21,7 @@ class DrawerNavigationWidget extends StatelessWidget {
             Container(
               height: 220,
               width: MediaQuery.of(context).size.width,
-              color: Color(0xFF48d0b0),
+              color: const Color(0xFF48d0b0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

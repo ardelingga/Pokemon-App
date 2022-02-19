@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokemon_app/business_logic/blocs/pokemon/pokemon_cubit.dart';
+import 'package:pokemon_app/business_logic/providers/favorite_pokemon_provider.dart';
 import 'package:pokemon_app/views/screens/home/widgets/background_logo.dart';
 import 'package:pokemon_app/views/screens/home/widgets/content_shimmer.dart';
 import 'package:pokemon_app/views/screens/home/widgets/item_pokemon.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  FavoritePokemonProvider? favoritePokemonProvider;
   ScrollController? scrollController;
   var pokemonCubit = PokemonCubit();
   double heightSliverbar = 20;
@@ -46,11 +48,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    favoritePokemonProvider = context.read<FavoritePokemonProvider>();
     Size size = MediaQuery.of(context).size;
     return BlocProvider<PokemonCubit>(
       create: (context) => pokemonCubit,
       child: Scaffold(
         key: _scaffoldKey,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _scaffoldKey.currentState!.openEndDrawer();
+          },
+          backgroundColor: Colors.blue,
+          child: const Icon(
+            Icons.list_outlined,
+            color: Colors.white,
+          ),
+        ),
         endDrawer: DrawerNavigationWidget(),
         backgroundColor: Colors.white,
         body: Stack(
@@ -69,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 25,
                       ),
                       onPressed: () {
-                        // Do something
+                        favoritePokemonProvider!.getListFavorite();
                       },
                     ),
                   ),

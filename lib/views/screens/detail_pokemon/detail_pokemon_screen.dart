@@ -5,11 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pokemon_app/business_logic/blocs/pokemon/pokemon_cubit.dart';
 import 'package:pokemon_app/business_logic/constants/path_assets.dart';
 import 'package:pokemon_app/business_logic/models/pokemon_model.dart';
+import 'package:pokemon_app/business_logic/providers/favorite_pokemon_provider.dart';
 import 'package:pokemon_app/views/screens/detail_pokemon/widgets/about_tab.dart';
 import 'package:pokemon_app/views/screens/detail_pokemon/widgets/base_stats_tab.dart';
 import 'package:pokemon_app/views/screens/detail_pokemon/widgets/notfound_tab.dart';
 import 'package:pokemon_app/views/screens/home/widgets/img_loading_shimmer.dart';
 import 'package:pokemon_app/views/widgets/common_widgets.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class DetailPokemonScreen extends StatefulWidget {
@@ -29,13 +31,14 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
   TabController? tabController;
   var pokemonCubit = PokemonCubit();
   double heightSliverbar = 20;
+  FavoritePokemonProvider? favoritePokemonProvider;
+  bool isFavorite = false;
 
   @override
   void initState() {
     super.initState();
     scrollController = ScrollController(initialScrollOffset: 16);
     tabController = TabController(length: 4, vsync: this);
-    firstAction();
   }
 
   @override
@@ -46,7 +49,10 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
   }
 
   Future<void> firstAction() async {
-    await pokemonCubit.getListPokemon();
+    await Future.delayed(const Duration(microseconds: 500));
+    await favoritePokemonProvider!
+        .findPokemonFavorit(widget.pokemon.id.toString());
+
     scrollController!.addListener(() {
       var scroll = scrollController!.position.pixels * 3;
       if (scroll >= 20 && scroll <= 60) {
@@ -59,7 +65,9 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
 
   @override
   Widget build(BuildContext context) {
+    favoritePokemonProvider = context.read<FavoritePokemonProvider>();
     Size size = MediaQuery.of(context).size;
+    firstAction();
     return BlocProvider<PokemonCubit>(
       create: (context) => pokemonCubit,
       child: Scaffold(
@@ -73,10 +81,13 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
                 child: IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: Colors.black87,
+                    color: Colors.white,
                     size: 25,
                   ),
                   onPressed: () {
+                    // favoritePokemonProvider!.getListFavorite();
+                    // favoritePokemonProvider!
+                    //     .findPokemonFavorit(widget.pokemon.id.toString());
                     Navigator.pop(context);
                   },
                 ),
@@ -84,13 +95,26 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.favorite_border_rounded,
-                      size: 30,
-                      color: Colors.black87,
+                  child: Consumer<FavoritePokemonProvider>(
+                    builder: (context, data, child) => IconButton(
+                      icon: data.isFavorite!
+                          ? const Icon(
+                              Icons.favorite,
+                              size: 30,
+                              color: Colors.white,
+                            )
+                          : const Icon(
+                              Icons.favorite_border_rounded,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                      onPressed: () async {
+                        var idPokemon = widget.pokemon.id.toString();
+                        data.isFavorite!
+                            ? await removeFromFavorite(idPokemon)
+                            : await saveToFavorite(idPokemon);
+                      },
                     ),
-                    onPressed: () {},
                   ),
                 ),
               ],
@@ -241,11 +265,11 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 child: Wrap(
                                   children: [
-                                    const Align(
+                                    Align(
                                       alignment: Alignment.topRight,
                                       child: Text(
-                                        "#01",
-                                        style: TextStyle(
+                                        "#0${widget.pokemon.id}",
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w900,
@@ -333,183 +357,6 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
                       ],
                     ),
                   ),
-                  // const SizedBox(
-                  //   height: 50,
-                  // ),
-                  // Container(
-                  //   height: 100,
-                  //   color: Colors.yellow,
-                  // ),
-                  // const SizedBox(
-                  //   height: 50,
-                  // ),
-                  // Container(
-                  //   height: 100,
-                  //   color: Colors.yellow,
-                  // ),
-                  // const SizedBox(
-                  //   height: 50,
-                  // ),
-                  // Container(
-                  //   height: 100,
-                  //   color: Colors.yellow,
-                  // ),
-                  // const SizedBox(
-                  //   height: 50,
-                  // ),
-                  // Container(
-                  //   height: 100,
-                  //   color: Colors.yellow,
-                  // ),
-                  // const SizedBox(
-                  //   height: 50,
-                  // ),
-                  // Container(
-                  //   height: 100,
-                  //   color: Colors.yellow,
-                  // ),
-                  // Container(
-                  //   color: Colors.green,
-                  //   width: size.width,
-                  //   child: Stack(
-                  //     children: [
-                  //       Column(
-                  //         children: [
-                  //           Stack(
-                  //             children: [
-                  //               Positioned(
-                  //                 right: -70,
-                  //                 bottom: -60,
-                  //                 child: SizedBox(
-                  //                   child: SvgPicture.asset(
-                  //                     PathAssets.icons + "icon_pokemon.svg",
-                  //                     width: size.width / 1.2,
-                  //                     color: Colors.white.withOpacity(0.5),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               Padding(
-                  //                 padding: const EdgeInsets.symmetric(
-                  //                     horizontal: 20),
-                  //                 child: Container(
-                  //                   height: (size.height / 2) - 100.0,
-                  //                   child: Center(
-                  //                     child: Column(
-                  //                       children: [
-                  //                         Align(
-                  //                           alignment: Alignment.topRight,
-                  //                           child: Text(
-                  //                             "#01",
-                  //                             style: TextStyle(
-                  //                               color: Colors.white,
-                  //                               fontSize: 16,
-                  //                               fontWeight: FontWeight.w900,
-                  //                             ),
-                  //                           ),
-                  //                         ),
-                  //                         Align(
-                  //                           alignment: Alignment.topLeft,
-                  //                           child: Container(
-                  //                             decoration: BoxDecoration(
-                  //                               color: Colors.white
-                  //                                   .withOpacity(0.2),
-                  //                               borderRadius:
-                  //                                   BorderRadius.circular(30),
-                  //                             ),
-                  //                             child: Padding(
-                  //                               padding:
-                  //                                   const EdgeInsets.symmetric(
-                  //                                       horizontal: 10,
-                  //                                       vertical: 5),
-                  //                               child: Text(
-                  //                                 "Pokedex",
-                  //                                 style: TextStyle(
-                  //                                   color: Colors.white,
-                  //                                   fontSize: 14,
-                  //                                   fontWeight: FontWeight.w900,
-                  //                                 ),
-                  //                               ),
-                  //                             ),
-                  //                           ),
-                  //                         ),
-                  //                         const SizedBox(
-                  //                           height: 20,
-                  //                         ),
-                  //                       ],
-                  //                     ),
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //           Container(
-                  //             height: 200,
-                  //             decoration: BoxDecoration(
-                  //               color: Colors.red,
-                  //               borderRadius: BorderRadius.only(
-                  //                 topLeft: Radius.circular(30),
-                  //                 topRight: Radius.circular(30),
-                  //               ),
-                  //             ),
-                  //             child: Column(
-                  //               children: [
-                  //                 const SizedBox(
-                  //                   height: 50,
-                  //                 ),
-                  //                 Container(
-                  //                   height: 100,
-                  //                   color: Colors.yellow,
-                  //                 ),
-                  //                 const SizedBox(
-                  //                   height: 50,
-                  //                 ),
-                  //                 Container(
-                  //                   height: 100,
-                  //                   color: Colors.yellow,
-                  //                 ),
-                  //                 const SizedBox(
-                  //                   height: 50,
-                  //                 ),
-                  //                 Container(
-                  //                   height: 100,
-                  //                   color: Colors.yellow,
-                  //                 ),
-                  //                 const SizedBox(
-                  //                   height: 50,
-                  //                 ),
-                  //                 Container(
-                  //                   height: 100,
-                  //                   color: Colors.yellow,
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       Center(
-                  //         child: Container(
-                  //           // color: Colors.red,
-                  //           height: (size.height / 2) - 70,
-                  //           child: CachedNetworkImage(
-                  //             imageUrl: widget.pokemon.img!,
-                  //             progressIndicatorBuilder:
-                  //                 (context, url, downloadProgress) => SizedBox(
-                  //               height: 30,
-                  //               width: 30,
-                  //               child: CircularProgressIndicator(
-                  //                 value: downloadProgress.progress,
-                  //                 color: Colors.grey,
-                  //                 backgroundColor: Colors.grey,
-                  //               ),
-                  //             ),
-                  //             errorWidget: (context, url, error) =>
-                  //                 const Icon(Icons.error),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                 ],
               ),
             )
@@ -517,5 +364,13 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
         ),
       ),
     );
+  }
+
+  Future saveToFavorite(String idPokemon) async {
+    await favoritePokemonProvider!.saveToFavorite(idPokemon);
+  }
+
+  Future removeFromFavorite(String idPokemon) async {
+    await favoritePokemonProvider!.removeFromFavorite(idPokemon);
   }
 }

@@ -1,4 +1,5 @@
 class PokemonModel {
+  int? id;
   String? name;
   String? species;
   String? img;
@@ -9,6 +10,7 @@ class PokemonModel {
   List<StatPokemonModel>? stats;
   List<GroupPokemonModel>? groups;
   PokemonModel({
+    this.id,
     this.name,
     this.species,
     this.img,
