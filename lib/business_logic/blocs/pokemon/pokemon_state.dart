@@ -7,6 +7,7 @@ class PokemonInitial extends PokemonState {}
 
 class PokemonLoading extends PokemonState {}
 
+// ignore: must_be_immutable
 class PokemonLoaded extends PokemonState {
   List<PokemonModel> listPokemon;
   PokemonLoaded({required this.listPokemon});

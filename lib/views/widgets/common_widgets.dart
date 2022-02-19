@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class CommonWidget {
@@ -6,13 +5,13 @@ class CommonWidget {
     Color bgColor = Colors.white;
 
     if (type == "grass") {
-      bgColor = Colors.lightGreen;
+      bgColor = const Color(0xFF48d0b0);
     } else if (type == "fire") {
-      bgColor = Colors.orange;
+      bgColor = const Color(0xFFfb6c6c);
     } else if (type == "water") {
       bgColor = Colors.blue;
     } else if (type == "bug") {
-      bgColor = Colors.cyan;
+      bgColor = const Color(0xFFffce4b);
     } else {
       bgColor = Colors.purpleAccent;
     }

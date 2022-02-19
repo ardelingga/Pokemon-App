@@ -9,7 +9,9 @@ import 'package:pokemon_app/views/screens/detail_pokemon/widgets/about_tab.dart'
 import 'package:pokemon_app/views/screens/detail_pokemon/widgets/base_stats_tab.dart';
 import 'package:pokemon_app/views/screens/detail_pokemon/widgets/notfound_tab.dart';
 import 'package:pokemon_app/views/screens/home/widgets/img_loading_shimmer.dart';
+import 'package:pokemon_app/views/widgets/common_widgets.dart';
 
+// ignore: must_be_immutable
 class DetailPokemonScreen extends StatefulWidget {
   DetailPokemonScreen({Key? key, required this.pokemon, this.heroTag})
       : super(key: key);
@@ -39,7 +41,8 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
   @override
   void dispose() {
     super.dispose();
-    scrollController!.dispose();
+    // scrollController!.dispose();
+    // tabController!.dispose();
   }
 
   Future<void> firstAction() async {
@@ -97,7 +100,8 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
               snap: true,
               // collapsedHeight: 100,
               elevation: 0,
-              backgroundColor: Colors.green,
+              backgroundColor: CommonWidget.getBackgoundColor(
+                  widget.pokemon.types![0].name!),
               flexibleSpace: SizedBox(
                 width: size.width,
                 child: Stack(
@@ -123,7 +127,8 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    color: Colors.green,
+                    color: CommonWidget.getBackgoundColor(
+                        widget.pokemon.types![0].name!),
                     child: Stack(
                       children: [
                         Column(
@@ -143,9 +148,6 @@ class _DetailPokemonScreenState extends State<DetailPokemonScreen>
                                         color: Colors.white.withOpacity(0.5),
                                       ),
                                     ),
-                                  ),
-                                  Column(
-                                    children: [],
                                   ),
                                 ],
                               ),

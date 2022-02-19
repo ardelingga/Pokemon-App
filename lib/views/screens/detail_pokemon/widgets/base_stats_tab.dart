@@ -2,9 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:pokemon_app/business_logic/models/pokemon_model.dart';
 
-class BaseStatsTab extends StatelessWidget {
+// ignore: must_be_immutable
+class BaseStatsTab extends StatefulWidget {
   BaseStatsTab({Key? key, required this.pokemon}) : super(key: key);
-  PokemonModel pokemon;
+  PokemonModel? pokemon;
+
+  @override
+  _BaseStatsTabState createState() => _BaseStatsTabState();
+}
+
+class _BaseStatsTabState extends State<BaseStatsTab> {
+  int total = 0;
+
+  void countTotal(int value) {
+    total += value;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    firstAction();
+  }
+
+  Future<void> firstAction() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +43,12 @@ class BaseStatsTab extends StatelessWidget {
               height: 20,
             ),
             ListView.builder(
-                itemCount: pokemon.stats!.length,
+                itemCount: widget.pokemon!.stats!.length,
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, i) {
+                  countTotal(widget.pokemon!.stats![i].amount!);
                   return Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: Row(
@@ -34,11 +58,13 @@ class BaseStatsTab extends StatelessWidget {
                           child: SizedBox(
                             width: size.width,
                             child: Text(
-                              pokemon.stats![i].name! == "special-attack"
+                              widget.pokemon!.stats![i].name! ==
+                                      "special-attack"
                                   ? "SP Attack"
-                                  : pokemon.stats![i].name! == "special-defense"
+                                  : widget.pokemon!.stats![i].name! ==
+                                          "special-defense"
                                       ? "SP Defense"
-                                      : pokemon.stats![i].name!,
+                                      : widget.pokemon!.stats![i].name!,
                               style: const TextStyle(
                                   color: Colors.black54,
                                   fontSize: 14,
@@ -51,7 +77,7 @@ class BaseStatsTab extends StatelessWidget {
                           child: SizedBox(
                             width: size.width,
                             child: Text(
-                              "${pokemon.stats![i].amount}",
+                              "${widget.pokemon!.stats![i].amount}",
                               style: const TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14,
@@ -64,7 +90,10 @@ class BaseStatsTab extends StatelessWidget {
                           child: LinearPercentIndicator(
                             barRadius: const Radius.circular(30),
                             lineHeight: 8.0,
-                            percent: (pokemon.stats![i].amount! / 100),
+                            percent:
+                                (widget.pokemon!.stats![i].amount! / 100) >= 1
+                                    ? 1.0
+                                    : (widget.pokemon!.stats![i].amount! / 100),
                             progressColor:
                                 i % 2 == 0 ? Colors.redAccent : Colors.green,
                           ),
@@ -79,12 +108,12 @@ class BaseStatsTab extends StatelessWidget {
             Row(
               children: [
                 Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: SizedBox(
                     width: size.width,
-                    child: Text(
+                    child: const Text(
                       "Total",
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14,
                           fontWeight: FontWeight.w600),
@@ -92,11 +121,11 @@ class BaseStatsTab extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  flex: 3,
+                  flex: 1,
                   child: SizedBox(
                     width: size.width,
                     child: Text(
-                      "317",
+                      "$total",
                       style: const TextStyle(
                           color: Colors.black87,
                           fontSize: 14,
@@ -104,14 +133,30 @@ class BaseStatsTab extends StatelessWidget {
                     ),
                   ),
                 ),
+                Flexible(
+                  flex: 3,
+                  child: LinearPercentIndicator(
+                    barRadius: const Radius.circular(30),
+                    lineHeight: 8.0,
+                    percent: double.parse(
+                                ((total / widget.pokemon!.stats!.length) / 100)
+                                    .toStringAsFixed(2)) >=
+                            1
+                        ? 1.0
+                        : double.parse(
+                            ((total / widget.pokemon!.stats!.length) / 100)
+                                .toStringAsFixed(2)),
+                    progressColor: Colors.blue,
+                  ),
+                ),
               ],
             ),
             const SizedBox(
               height: 25,
             ),
-            Text(
+            const Text(
               "Type Defense",
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.black87,
                   fontSize: 16,
                   fontWeight: FontWeight.w600),
@@ -120,7 +165,7 @@ class BaseStatsTab extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "The effectiveness of each type on ${pokemon.name}",
+              "The effectiveness of each type on ${widget.pokemon!.name}",
               style: const TextStyle(
                   color: Colors.black54,
                   fontSize: 14,

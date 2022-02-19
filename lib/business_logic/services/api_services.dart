@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_app/business_logic/config/config.dart';
 import 'package:pokemon_app/business_logic/models/response_model.dart';
 import 'package:pokemon_app/business_logic/utils/dio_error_message_utils.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 ApiService apiService = ApiService();
 

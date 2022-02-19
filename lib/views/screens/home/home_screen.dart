@@ -1,15 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pokemon_app/business_logic/blocs/pokemon/pokemon_cubit.dart';
-import 'package:pokemon_app/business_logic/constants/path_assets.dart';
-import 'package:pokemon_app/views/screens/detail_pokemon/detail_pokemon_screen.dart';
+import 'package:pokemon_app/views/screens/home/widgets/background_logo.dart';
 import 'package:pokemon_app/views/screens/home/widgets/content_shimmer.dart';
-import 'package:pokemon_app/views/widgets/common_widgets.dart';
+import 'package:pokemon_app/views/screens/home/widgets/item_pokemon.dart';
 import 'package:pokemon_app/views/widgets/drawer_navigation_widget.dart';
-
-import 'widgets/img_loading_shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -60,17 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            Positioned(
-              right: -132,
-              top: -110,
-              child: SizedBox(
-                child: SvgPicture.asset(
-                  PathAssets.icons + "icon_pokemon.svg",
-                  width: size.width / 1.2,
-                  color: Colors.grey.withOpacity(0.5),
-                ),
-              ),
-            ),
+            const BackgroundLogo(),
             CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
@@ -114,17 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: size.width,
                     child: Stack(
                       children: [
-                        Positioned(
-                          right: -132,
-                          top: -110,
-                          child: SizedBox(
-                            child: SvgPicture.asset(
-                              PathAssets.icons + "icon_pokemon.svg",
-                              width: size.width / 1.2,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
-                        ),
+                        const BackgroundLogo(),
                         AnimatedPositioned(
                           duration: const Duration(milliseconds: 100),
                           bottom: 10,
@@ -153,160 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         sliver: SliverGrid(
                           delegate: SliverChildBuilderDelegate(
                             (context, i) {
-                              var type = state.listPokemon[i].types![0].name;
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DetailPokemonScreen(
-                                                pokemon: state.listPokemon[i],
-                                                heroTag: "imgHeroTag#$i",
-                                              )));
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    color:
-                                        CommonWidget.getBackgoundColor(type!),
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          Positioned(
-                                            right: -20,
-                                            bottom: -20,
-                                            child: SizedBox(
-                                              child: SvgPicture.asset(
-                                                PathAssets.icons +
-                                                    "icon_pokemon.svg",
-                                                width: size.width / 3,
-                                                color: Colors.white
-                                                    .withOpacity(0.3),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 8, left: 16, top: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              state.listPokemon[i].name!,
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w900),
-                                            ),
-                                            const SizedBox(
-                                              height: 10,
-                                            ),
-                                            Flexible(
-                                              child: Row(
-                                                children: [
-                                                  Flexible(
-                                                    flex: 3,
-                                                    child: SizedBox(
-                                                      width: size.width,
-                                                      height: size.width,
-                                                      child: ListView.builder(
-                                                        itemCount: state
-                                                            .listPokemon[i]
-                                                            .types!
-                                                            .length,
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        shrinkWrap: true,
-                                                        physics:
-                                                            const NeverScrollableScrollPhysics(),
-                                                        itemBuilder:
-                                                            (context, j) {
-                                                          return Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 5),
-                                                            child: Container(
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .white
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              5)),
-                                                              child: Padding(
-                                                                padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        4,
-                                                                    vertical:
-                                                                        2),
-                                                                child: Center(
-                                                                  child: Text(
-                                                                    state
-                                                                        .listPokemon[
-                                                                            i]
-                                                                        .types![
-                                                                            j]
-                                                                        .name!,
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          14,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Flexible(
-                                                    flex: 5,
-                                                    child: SizedBox(
-                                                      width: size.width,
-                                                      height: size.width,
-                                                      child: Hero(
-                                                        tag: "imgHeroTag#$i",
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl: state
-                                                              .listPokemon[i]
-                                                              .img!,
-                                                          progressIndicatorBuilder:
-                                                              (context, url,
-                                                                      downloadProgress) =>
-                                                                  const ImgLoadingShimmer(),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              const Icon(
-                                                                  Icons.error),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
+                              return ItemPokemon(
+                                  pokemon: state.listPokemon[i], i: i);
                             },
                             childCount: state.listPokemon.length,
                           ),

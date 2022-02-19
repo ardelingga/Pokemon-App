@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_app/business_logic/models/pokemon_model.dart';
 
+// ignore: must_be_immutable
 class AboutTab extends StatelessWidget {
   AboutTab({Key? key, required this.pokemon}) : super(key: key);
   PokemonModel pokemon;
@@ -24,9 +25,9 @@ class AboutTab extends StatelessWidget {
                   flex: 1,
                   child: SizedBox(
                     width: size.width,
-                    child: Text(
+                    child: const Text(
                       "Species",
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14,
                           fontWeight: FontWeight.w600),
@@ -57,9 +58,9 @@ class AboutTab extends StatelessWidget {
                   flex: 1,
                   child: SizedBox(
                     width: size.width,
-                    child: Text(
+                    child: const Text(
                       "Height",
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14,
                           fontWeight: FontWeight.w600),
@@ -90,9 +91,9 @@ class AboutTab extends StatelessWidget {
                   flex: 1,
                   child: SizedBox(
                     width: size.width,
-                    child: Text(
+                    child: const Text(
                       "Weight",
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14,
                           fontWeight: FontWeight.w600),
@@ -123,9 +124,9 @@ class AboutTab extends StatelessWidget {
                   flex: 1,
                   child: SizedBox(
                     width: size.width,
-                    child: Text(
+                    child: const Text(
                       "Abilities",
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.black54,
                           fontSize: 14,
                           fontWeight: FontWeight.w600),
